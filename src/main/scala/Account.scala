@@ -20,14 +20,18 @@ class Account(initialBalance: Double, val uid: Long = Bank getUniqueId) {
 	}
 
 	def deposit(amount: Double) {
-		if (amount >= 0) {
-			balance += amount;
-		} else {
-			throw new IllegalAmountException
+		this.synchronized {
+			if (amount >= 0) {
+				balance += amount;
+			} else {
+				throw new IllegalAmountException
+			}
 		}
 	}
 
 	def getBalanceAmount: Double = {
-		balance
+		this.synchronized {
+			balance
+		}
 	}
 }
