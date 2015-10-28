@@ -8,6 +8,11 @@ object Main extends App {
 		t
 	}
 
+
+	throw new NoSufficientFundsException
   // Write a few transaction examples using Threads
+	thread({
+			while (true)
+				print("sheeiidd")})
 
 }

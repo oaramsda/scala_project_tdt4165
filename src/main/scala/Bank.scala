@@ -1,15 +1,18 @@
+import java.util.concurrent.atomic.AtomicLong
+
 object Bank {
 
-	private var idCounter: Int = 0
+	private var idCounter: AtomicLong = new AtomicLong
 
 	def transaction(from: Account, to: Account, amount: Double): Unit = {
-		from.withdraw(amount);
-		to.deposit(amount);
+		if (amount > 0) {
+			from.withdraw(amount);
+			to.deposit(amount);
+		}
 	}
 
-	def getUniqueId: Int = {
-		idCounter += 1
-		idCounter
+	def getUniqueId: Long = {
+		idCounter.incrementAndGet
 	}
 
 }
