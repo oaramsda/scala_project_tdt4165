@@ -18,7 +18,8 @@ object Main extends App {
 
 	for (i <- 0 to n) {
 		random_index = rand.nextInt(accs.length)
-		val t = thread(Bank.transaction(accs(random_index), accs(random_index), Math.round(Math.random*500): Double))
+		random_index2 = rand.nextInt(accs.length)
+		val t = thread(Bank.transaction(accs(random_index), accs(random_index2), Math.round(Math.random*500): Double))
 	}
 
   	accs.foreach{acc => println(acc.getBalanceAmount)}
