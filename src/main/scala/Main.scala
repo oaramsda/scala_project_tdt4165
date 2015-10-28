@@ -1,3 +1,5 @@
+
+
 object Main extends App {
 
 	def thread(body: => Unit): Thread = {
@@ -8,23 +10,18 @@ object Main extends App {
 		t
 	}
 
-<<<<<<< HEAD
   	// Write a few transaction examples using Threads
-  	val n = 10
-  	val accs = for (i <- 0 to n) yield {new Account(1000.0)}
+  	val n = 2
+  	val accs = for (i <- 0 to n) yield {new Account(Math.round(Math.random*10000): Double)}
   	//accs.foreach{acc => acc.deposit(Math.round(Math.random*1000): Double)}
+
+  	val rand = new java.util.Random(System.nanoTime());
+	var random_index = rand.nextInt();
 	
 	for (i <- 0 to n) {
-		val t = thread(Bank.transaction(acc1, acc2, 500))
+		random_index = rand.nextInt(accs.length)
+		val t = thread(Bank.transaction(accs(random_index), accs(random_index), Math.round(Math.random*500): Double))
 	}
-=======
 
-	throw new NoSufficientFundsException
-  // Write a few transaction examples using Threads
-	thread({
-			while (true)
-				print("sheeiidd")})
->>>>>>> 77a1d5b722c93253bd48eb27665cf102e728aa9f
-
-  	
+  	accs.foreach{acc => println(acc.getBalanceAmount)}
 }
