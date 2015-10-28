@@ -1,3 +1,4 @@
+import exceptions._
 import java.util.concurrent.atomic.AtomicLong
 
 object Bank {
@@ -8,7 +9,8 @@ object Bank {
 		if (amount > 0) {
 			from.withdraw(amount);
 			to.deposit(amount);
-		}
+		} else if (amount < 0)
+			throw new IllegalAmountException
 	}
 
 	def getUniqueId: Long = {
