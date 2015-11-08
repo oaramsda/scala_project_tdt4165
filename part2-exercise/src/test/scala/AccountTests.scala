@@ -92,6 +92,7 @@ class AccountTransferTests extends FunSuite {
     acc1 transferTo(acc2, 50)
 
     while (bank.getProcessedTransactionsAsList.size != 1) {
+			println("test 8")
       Thread.sleep(100)
     }
 
@@ -113,6 +114,7 @@ class AccountTransferTests extends FunSuite {
 
     assert(bank.getProcessedTransactionsAsList.last.status == TransactionStatus.FAILED)
     assert((acc1.getBalanceAmount == 500) && (acc2.getBalanceAmount == 1000))
+		println("test 9")
   }
 
 
@@ -130,6 +132,7 @@ class AccountTransferTests extends FunSuite {
     assert(bank.getProcessedTransactionsAsList.last.status == TransactionStatus.FAILED)
     assert((acc1.getBalanceAmount == 100) && (acc2.getBalanceAmount == 1000))
 
+		println("test 10")
   }
 
 
@@ -152,11 +155,14 @@ class AccountTransferTests extends FunSuite {
     second.join()
 
     while (bank.getProcessedTransactionsAsList.size != 200) {
+			println(bank.getProcessedTransactionsAsList.size)
+			println(bank.transactionsQueue.iterator.size)
       Thread.sleep(100)
     }
 
     assert((acc1.getBalanceAmount == 2300) && (acc2.getBalanceAmount == 5700))
 
+		println("test 11")
   }
 
   test("Test 12: Failed transactions should retry and potentially succeed with multiple allowed attempts") {
@@ -181,6 +187,7 @@ class AccountTransferTests extends FunSuite {
     }
     assert(failed <= 5)
 
+		println("test 12")
   }
 
   test("Test 13: Some transactions should be stopped with only one allowed attempt") {
@@ -202,6 +209,8 @@ class AccountTransferTests extends FunSuite {
       if (!(acc2.getBalanceAmount != 300 && acc3.getBalanceAmount == 0)) failed += 1
     }
     assert(failed <= 5)
+
+		println("test 12")
   }
 
 }
