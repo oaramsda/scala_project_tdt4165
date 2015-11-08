@@ -12,10 +12,11 @@ class Bank(val allowedAttempts: Integer = 3) {
     transactionsQueue push new Transaction(
       transactionsQueue, processedTransactions, from, to, amount, allowedAttempts)
   }
-  
+
   def generateAccountId: Long = {
     idCounter.incrementAndGet
   }
+
   private def processTransactions: Unit = ???
 
   def addAccount(initialBalance: Double): Account = {
