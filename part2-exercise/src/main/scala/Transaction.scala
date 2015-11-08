@@ -65,8 +65,9 @@ class Transaction(val transactionsQueue: TransactionQueue,
 			} catch {
 				case exc: Exception =>
 					attempt += 1
-					if (attempt == allowedAttemps)
+					if (attempt == allowedAttemps) {
 						status = TransactionStatus.FAILED
+					}
 			}
 		}
 

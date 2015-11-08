@@ -5,9 +5,9 @@ import java.util.concurrent.atomic.AtomicLong
 class Bank(val allowedAttempts: Integer = 3) {
 
 	private val uid: AtomicLong = new AtomicLong
-	val transactionsQueue: TransactionQueue = new TransactionQueue()
+	private val transactionsQueue: TransactionQueue = new TransactionQueue()
 	private val processedTransactions: TransactionQueue = new TransactionQueue()
-	private val executorContext = Executors newFixedThreadPool(10)
+	private val executorContext = Executors newFixedThreadPool(1000)
 
 	def addTransactionToQueue(from: Account, to: Account, amount: Double): Unit = {
 		val t = new Transaction(
@@ -27,9 +27,10 @@ class Bank(val allowedAttempts: Integer = 3) {
 	private def processTransactions: Unit = {
 		val t: Transaction = transactionsQueue.pop
 		executorContext submit(t)
-		Thread sleep(20)
+		Thread sleep(10)
 		if (t.status == TransactionStatus.PENDING) {
 			transactionsQueue.push(t)
+			Thread sleep(450)
 			executorContext submit(new Runnable {
 				def run() {
 					processTransactions
