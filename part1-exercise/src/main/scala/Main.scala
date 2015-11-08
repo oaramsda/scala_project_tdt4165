@@ -13,8 +13,9 @@ object Main extends App {
   	val accs = for (i <- 0 to n) yield {new Account(Math.round(Math.random*10000): Double)}
   	//accs.foreach{acc => acc.deposit(Math.round(Math.random*1000): Double)}
 
-  	val rand = new java.util.Random(System.nanoTime());
-	var random_index = rand.nextInt();
+  	val rand = new java.util.Random(System.nanoTime)
+	var random_index = 0
+	var random_index = 0
 
 	for (i <- 0 to n) {
 		random_index = rand.nextInt(accs.length)
