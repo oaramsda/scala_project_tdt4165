@@ -53,36 +53,31 @@ class Transaction(val transactionsQueue: TransactionQueue,
                   val allowedAttemps: Int) extends Runnable {
 
 	var status: TransactionStatus.Value = TransactionStatus.PENDING
+	var attempt = 0
 
 	override def run: Unit = {
 
-		var attempt = allowedAttemps
-
 		def doTransaction() = {
-			from withdraw amount
-			to deposit amount
-
-			transactionsQueue synchronized {
-				processedTransactions synchronized {
-					var element = transactionsQueue indexOf(this)
-					processedTransactions enqueue(element)
-				}
+			try {
+				from withdraw amount
+				to deposit amount
+				status = TransactionStatus.SUCCESS
+			} catch {
+				case exc: Exception =>
+					attempt += 1
+					if (attempt == allowedAttemps)
+						status = TransactionStatus.FAILED
 			}
-			attempt = 0
 		}
 
-		while (attempt != 0) {
-			attempt -= 1
-			if (from.uid < to.uid) from synchronized {
-				to synchronized {
-					doTransaction
-				}
-			} else to synchronized {
-				from synchronized {
-					doTransaction
-				}
+		if (from.uid < to.uid) from synchronized {
+			to synchronized {
+				doTransaction
 			}
-		 Thread.sleep(100)
+		} else to synchronized {
+			from synchronized {
+				doTransaction
+			}
 		}
 	}
 }
