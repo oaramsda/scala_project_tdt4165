@@ -56,22 +56,33 @@ class Transaction(val transactionsQueue: TransactionQueue,
 
 	override def run: Unit = {
 
+		var attempt = allowedAttemps
+
 		def doTransaction() = {
 			from withdraw amount
 			to deposit amount
+
+			transactionsQueue synchronized {
+				processedTransactions synchronized {
+					var element = transactionsQueue indexOf(this)
+					processedTransactions enqueue(element)
+				}
+			}
+			attempt = 0
 		}
 
-		if (from.uid < to.uid) from synchronized {
-			to synchronized {
-				doTransaction
+		while (attempt != 0) {
+			attempt -= 1
+			if (from.uid < to.uid) from synchronized {
+				to synchronized {
+					doTransaction
+				}
+			} else to synchronized {
+				from synchronized {
+					doTransaction
+				}
 			}
-		} else to synchronized {
-			from synchronized {
-				doTransaction
-			}
+		 Thread.sleep(100)
 		}
-
-		//Extend this method to satisfy new requirements.
-
 	}
 }
