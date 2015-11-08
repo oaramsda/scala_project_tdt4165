@@ -1,4 +1,5 @@
 import scala.concurrent.forkjoin.ForkJoinPool
+import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicLong
 
 class Bank(val allowedAttempts: Integer = 3) {
@@ -6,7 +7,7 @@ class Bank(val allowedAttempts: Integer = 3) {
   private val uid: AtomicLong = new AtomicLong
   private val transactionsQueue: TransactionQueue = new TransactionQueue()
   private val processedTransactions: TransactionQueue = new TransactionQueue()
-  private val executorContext = ???
+  private val executorContext = Executors.newFixedThreadPool(100)
 
   def addTransactionToQueue(from: Account, to: Account, amount: Double): Unit = {
     transactionsQueue push new Transaction(
@@ -14,7 +15,7 @@ class Bank(val allowedAttempts: Integer = 3) {
   }
 
   def generateAccountId: Long = {
-    idCounter.incrementAndGet
+    uid.incrementAndGet
   }
 
   private def processTransactions: Unit = ???

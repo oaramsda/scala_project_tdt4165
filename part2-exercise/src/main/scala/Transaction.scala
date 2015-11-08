@@ -1,5 +1,5 @@
 import exceptions._
-import scala.collection.mutable
+import scala.collection.mutable.{Queue}
 
 object TransactionStatus extends Enumeration {
   val SUCCESS, PENDING, FAILED = Value
@@ -7,7 +7,7 @@ object TransactionStatus extends Enumeration {
 
 class TransactionQueue {
 
-	object Queue locqueue;
+	private val locqueue: Queue[Transaction] = new Queue
 
   // Remove and return the first element from the queue
   def pop: Transaction = {
