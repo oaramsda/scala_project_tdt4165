@@ -24,15 +24,20 @@ class Bank(val allowedAttempts: Integer = 3) {
 		uid.incrementAndGet
 	}
 
-	private def processTransactions = {
+	private def processTransactions: Unit = {
 		val t: Transaction = transactionsQueue.pop
 		executorContext submit(t)
 		Thread sleep(20)
-		while (t.status == TransactionStatus.PENDING) {
-			executorContext submit(t)
-			Thread sleep(20)
+		if (t.status == TransactionStatus.PENDING) {
+			transactionsQueue.push(t)
+			executorContext submit(new Runnable {
+				def run() {
+					processTransactions
+				}
+			})
 		}
-		processedTransactions push(t)
+		else
+			processedTransactions push(t)
 	}
 
 	def addAccount(initialBalance: Double): Account = {

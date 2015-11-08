@@ -155,8 +155,6 @@ class AccountTransferTests extends FunSuite {
     second.join()
 
     while (bank.getProcessedTransactionsAsList.size != 200) {
-			println(bank.getProcessedTransactionsAsList.size)
-			println(bank.transactionsQueue.iterator.size)
       Thread.sleep(100)
     }
 
@@ -210,7 +208,7 @@ class AccountTransferTests extends FunSuite {
     }
     assert(failed <= 5)
 
-		println("test 12")
+		println("test 13")
   }
 
 }
