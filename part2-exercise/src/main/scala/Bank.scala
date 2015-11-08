@@ -28,4 +28,7 @@ class Bank(val allowedAttempts: Integer = 3) {
     processedTransactions.iterator.toList
   }
 
+	override def run: Unit = {
+	}
+
 }
