@@ -39,11 +39,9 @@ class Bank(val bankId: String) extends Actor {
 		case GetAccountRequest(id) => sender ! findAccount(id)// Return account
 		case IdentifyActor => sender ! this
 		case t: Transaction => processTransaction(t)
-
 		case t: TransactionRequestReceipt => {
-			// Forward receipt
-			???
-		}
+      sender ! t
+    }
 
 		case msg => ???
 	}
