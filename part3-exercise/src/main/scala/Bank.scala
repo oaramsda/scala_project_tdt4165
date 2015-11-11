@@ -54,10 +54,10 @@ class Bank(val bankId: String) extends Actor {
 		val transactionStatus = t.status
 
     if (isInternal) {
-      val receivingAccount = findAccount(toAccountId)
+      val receivingAccount = findAccount(toAccountId).get
       receivingAccount ! t
     } else {
-      val sendToExternalBank = findOtherBank(bankId)
+      val sendToExternalBank = findOtherBank(bankId).get
       sendToExternalBank ! t
     }
 
