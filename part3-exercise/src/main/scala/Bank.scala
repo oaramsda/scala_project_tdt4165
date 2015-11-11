@@ -17,7 +17,9 @@ class Bank(val bankId: String) extends Actor {
 
 	def createAccount(initialBalance: Double): ActorRef = {
 		// Should create a new Account Actor and return its actor reference. Accounts should be assigned with unique ids (increment with 1).
-		???
+		val acc: Account = new Account(accountCounter.incrementAndGet.toString, bankId, initialBalance)
+
+    acc.ActorRef
 	}
 
 	def findAccount(accountId: String): Option[ActorRef] = {
