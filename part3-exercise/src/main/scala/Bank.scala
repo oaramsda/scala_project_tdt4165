@@ -112,8 +112,10 @@ class Bank(val bankId: String) extends Actor {
 					t.status = TransactionStatus.FAILED
 					this.self ! new TransactionRequestReceipt(toAccountId, t.id, t)
 				}
-				else
+				else {
+					t.status = TransactionStatus.FAILED
 					sendToExternalBank.get ! t
+				}
 			} catch {
 				case exc: NoSuchElementException => {
 					t.status = TransactionStatus.FAILED
