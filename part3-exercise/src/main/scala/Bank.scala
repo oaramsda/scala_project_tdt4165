@@ -66,11 +66,21 @@ class Bank(val bankId: String) extends Actor {
 		val transactionStatus = t.status
 
     if (isInternal) {
-      val receivingAccount = findAccount(toAccountId).get
-      receivingAccount ! t
+      val receivingAccount = findAccount(toAccountId)
+			if (receivingAccount.isEmpty) {
+				t.status = TransactionStatus.FAILED
+				this.self ! new TransactionRequestReceipt(toAccountId, t.id, t)
+			}
+			else
+				receivingAccount.get ! t
     } else {
-      val sendToExternalBank = findOtherBank(bankId).get
-      sendToExternalBank ! t
+      val sendToExternalBank = findOtherBank(bankId)
+			if (sendToExternalBank.isEmpty) {
+				t.status = TransactionStatus.FAILED
+				this.self ! new TransactionRequestReceipt(toAccountId, t.id, t)
+			}
+			else
+				sendToExternalBank.get ! t
     }
 
 		// This method should forward Transaction t to an account or another bank, depending on the "to"-address.
