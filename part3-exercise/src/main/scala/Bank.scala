@@ -40,8 +40,20 @@ class Bank(val bankId: String) extends Actor {
 		case IdentifyActor => sender ! this
 		case t: Transaction => processTransaction(t)
 		case t: TransactionRequestReceipt => {
-      sender ! t
-    }
+			val acc = t.toAccountNumber
+			val isInternal = acc.length <= 4
+			val toBankId = if (isInternal) bankId else acc.substring(0, 4)
+			val toAccountId = if (isInternal) acc else acc.substring(4)
+
+			if (isInternal) {
+				val receivingAccount = findAccount(toAccountId).get
+				receivingAccount ! t
+			} else {
+				val sendToExternalBank = findOtherBank(bankId).get
+				sendToExternalBank ! t
+			}
+
+		}
 
 		case msg => ???
 	}
