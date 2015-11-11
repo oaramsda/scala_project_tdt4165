@@ -106,13 +106,20 @@ class Bank(val bankId: String) extends Actor {
 				}
 			}
     } else {
-      val sendToExternalBank = findOtherBank(toBankId)
-			if (sendToExternalBank.isEmpty) {
-				t.status = TransactionStatus.FAILED
-				this.self ! new TransactionRequestReceipt(toAccountId, t.id, t)
+			try {
+				val sendToExternalBank = findOtherBank(toBankId)
+				if (sendToExternalBank.isEmpty) {
+					t.status = TransactionStatus.FAILED
+					this.self ! new TransactionRequestReceipt(toAccountId, t.id, t)
+				}
+				else
+					sendToExternalBank.get ! t
+			} catch {
+				case exc: NoSuchElementException => {
+					t.status = TransactionStatus.FAILED
+					this.self ! new TransactionRequestReceipt(toAccountId, t.id, t)
+				}
 			}
-			else
-				sendToExternalBank.get ! t
     }
 
 		// This method should forward Transaction t to an account or another bank, depending on the "to"-address.
