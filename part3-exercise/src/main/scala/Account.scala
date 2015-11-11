@@ -109,11 +109,11 @@ class Account(val accountId: String, val bankId: String, val initialBalance: Dou
         case _: IllegalAmountException =>
           t.status = TransactionStatus.FAILED
       }
-
+      var to_bankId: String = ""
       if (t.to.length > 4) {
-        val to_bankId = t.to.substring(0, 4)
+        to_bankId = t.to.substring(0, 4)
       } else {
-        val to_bankId = t.to
+        to_bankId = t.to
       }
 
       val bank: ActorRef = BankManager.findBank(to_bankId)
