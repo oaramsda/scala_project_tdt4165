@@ -60,20 +60,26 @@ class Bank(val bankId: String) extends Actor {
 		var isInternal = t.to.length <= 4
 		val toBankId = if (isInternal) bankId else t.to.substring(0, 4)
 		val toAccountId = if (isInternal) t.to else t.to.substring(4)
-		if (toBankId == bankId)
-			isInternal = true
 		val transactionStatus = t.status
 
+		if (toBankId == bankId)
+			isInternal = true
+
+		println(toBankId + " " + bankId)
+
 		if (isInternal) {
+			println("IS INTERNAL")
 			val receivingAccount = findAccount(toAccountId)
 			if (receivingAccount.isEmpty) {
 				t.status = TransactionStatus.FAILED
 				this.self ! new TransactionRequestReceipt(toAccountId, t.id, t)
 			}
-			else
+			else {
+				println("ACCOUNT RECEIVED TRANSACTION")
 				receivingAccount.get ! t
+			}
     } else {
-      val sendToExternalBank = findOtherBank(bankId)
+      val sendToExternalBank = findOtherBank(toBankId)
 			if (sendToExternalBank.isEmpty) {
 				t.status = TransactionStatus.FAILED
 				this.self ! new TransactionRequestReceipt(toAccountId, t.id, t)
