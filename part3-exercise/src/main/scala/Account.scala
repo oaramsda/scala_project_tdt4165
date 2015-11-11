@@ -97,7 +97,15 @@ class Account(val accountId: String, val bankId: String, val initialBalance: Dou
 
 		case t: Transaction => {
 			// Handle incoming transaction
-			???
+      try {
+        this.deposit(t.amount)
+      } catch {
+        case _: IllegalAmountException =>
+          t.status = TransactionStatus.FAILED
+      }
+
+      t.status = TransactionStatus.SUCCESS
+			
 		}
 
 		case msg => ???
