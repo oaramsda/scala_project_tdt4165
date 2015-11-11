@@ -89,7 +89,10 @@ class Account(val accountId: String, val bankId: String, val initialBalance: Dou
 
 		case TransactionRequestReceipt(to, transactionId, transaction) => {
 			if (transactions.contains(transactionId)) {
-				transactions.get(transactionId) = transaction
+				var transac = transactions.get(transactionId)
+				var trans = transac.get
+				trans.receiptReceived = true
+				trans.status = transaction.status
 			}
 		}
 
