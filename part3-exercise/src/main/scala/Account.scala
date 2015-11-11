@@ -29,7 +29,11 @@ class Account(val accountId: String, val bankId: String, val initialBalance: Dou
 
 	def allTransactionsCompleted: Boolean = {
 		// Should return whether all Transaction-objects in transactions are completed
-		???
+		for (i <- transactions.values) {
+			if (i.isCompleted == false)
+				return false
+		}
+		true
 	}
 
 	def withdraw(amount: Double): Unit = {
@@ -49,7 +53,8 @@ class Account(val accountId: String, val bankId: String, val initialBalance: Dou
 
 	def sendTransactionToBank(t: Transaction): Unit = {
 		// Should send a message containing t to the bank of this account
-		transactions += t
+		transactions += (t.to -> t)
+		BankManager.findBank(t.to)
 	}
 
 	def transferTo(accountNumber: String, amount: Double): Transaction = {
