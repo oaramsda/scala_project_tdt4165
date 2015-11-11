@@ -110,7 +110,7 @@ class Account(val accountId: String, val bankId: String, val initialBalance: Dou
 				case _: IllegalAmountException =>
 					t.status = TransactionStatus.FAILED
 			}
-			sender ! new TransactionRequestReceipt(t.from, to.id, to)
+			sender ! new TransactionRequestReceipt(t.from, t.id, t)
 		}
 
 		case msg => ???
