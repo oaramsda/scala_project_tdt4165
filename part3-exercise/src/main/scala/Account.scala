@@ -5,8 +5,8 @@ import scala.collection.immutable.HashMap
 case class TransactionRequest(toAccountNumber: String, amount: Double)
 
 case class TransactionRequestReceipt(toAccountNumber: String,
-																		 transactionId: String,
-																		 transaction: Transaction)
+                                     transactionId: String,
+                                     transaction: Transaction)
 
 case class BalanceRequest()
 
@@ -53,7 +53,7 @@ class Account(val accountId: String, val bankId: String, val initialBalance: Dou
 	}
 
 	def transferTo(accountNumber: String, amount: Double): Transaction = {
-		
+
 		val t = new Transaction(from = getFullAddress, to = accountNumber, amount = amount)
 
 		if (reserveTransaction(t)) {
@@ -93,7 +93,7 @@ class Account(val accountId: String, val bankId: String, val initialBalance: Dou
 			// Handle incoming transaction
 			???
 		}
-		
+
 		case msg => ???
 	}
 
