@@ -39,7 +39,7 @@ object TestHelper {
 	}
 }
 
-
+/*
 class Test01 extends FunSuite {
 
 	test("Add new bank") {
@@ -330,6 +330,7 @@ class Test12 extends FunSuite {
 }
 
 
+
 class Test13 extends FunSuite {
 
 	test("Create and find two different banks.") {
@@ -425,6 +426,7 @@ class Test15 extends FunSuite {
 	}
 
 }
+*/
 
 class Test16 extends FunSuite {
 

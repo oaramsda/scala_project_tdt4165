@@ -95,14 +95,14 @@ class Bank(val bankId: String) extends Actor {
 				println("ACCOUNT RECEIVED TRANSACTION")
 				if (receivingAccount.isEmpty) {
 					t.status = TransactionStatus.FAILED
-					this.self ! new TransactionRequestReceipt(toAccountId, t.id, t)
+					sender ! new TransactionRequestReceipt(toAccountId, t.id, t)
 				}
 				val receivingAccountGotten = receivingAccount.get
 				receivingAccountGotten ! t
 			} catch {
 				case exc: java.util.NoSuchElementException => {
 					t.status = TransactionStatus.FAILED
-					this.self ! new TransactionRequestReceipt(toAccountId, t.id, t)
+					sender ! new TransactionRequestReceipt(toAccountId, t.id, t)
 				}
 			}
     } else {
@@ -110,7 +110,7 @@ class Bank(val bankId: String) extends Actor {
 				val sendToExternalBank = findOtherBank(toBankId)
 				if (sendToExternalBank.isEmpty) {
 					t.status = TransactionStatus.FAILED
-					this.self ! new TransactionRequestReceipt(toAccountId, t.id, t)
+					sender ! new TransactionRequestReceipt(toAccountId, t.id, t)
 				}
 				else {
 					t.status = TransactionStatus.FAILED
@@ -119,7 +119,7 @@ class Bank(val bankId: String) extends Actor {
 			} catch {
 				case exc: NoSuchElementException => {
 					t.status = TransactionStatus.FAILED
-					this.self ! new TransactionRequestReceipt(toAccountId, t.id, t)
+					sender ! new TransactionRequestReceipt(toAccountId, t.id, t)
 				}
 			}
     }
