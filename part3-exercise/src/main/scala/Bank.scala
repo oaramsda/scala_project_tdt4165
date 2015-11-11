@@ -61,10 +61,7 @@ class Bank(val bankId: String) extends Actor {
       sendToExternalBank ! t
     }
 
-
-
 		// This method should forward Transaction t to an account or another bank, depending on the "to"-address.
 		// HINT: Make use of the variables that have been defined above.
-		???
 	}
 }
