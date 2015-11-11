@@ -103,23 +103,14 @@ class Account(val accountId: String, val bankId: String, val initialBalance: Dou
 
 		case t: Transaction => {
 			// Handle incoming transaction
-      try {
-        this.deposit(t.amount)
-      } catch {
-        case _: IllegalAmountException =>
-          t.status = TransactionStatus.FAILED
-      }
-
-      if t.to.length > 4 {
-        val to_bankId = t.to.substring(0, 4)
-      } else {
-        val to_bankId = t.to
-      }
-
-      val bank: ActorRef = BankManager.findBank(to_bankId)
-      val receipt = new TransactionRequestReceipt(t.to, t.id, t)
-      bank ! receipt
-
+			try {
+				this.deposit(t.amount)
+				t.status = TransactionStatus.SUCCESS
+			} catch {
+				case _: IllegalAmountException =>
+					t.status = TransactionStatus.FAILED
+			}
+			sender ! new TransactionRequestReceipt(t.from, to.id, to)
 		}
 
 		case msg => ???
