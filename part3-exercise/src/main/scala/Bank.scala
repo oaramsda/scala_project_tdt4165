@@ -33,7 +33,7 @@ class Bank(val bankId: String) extends Actor {
 
 	override def receive = {
 		case CreateAccountRequest(initialBalance) => sender ! createAccount(initialBalance)
-		case GetAccountRequest(id) => sender ! findAccount(id)// Return account
+		case GetAccountRequest(id) => sender ! findAccount(id)
 		case IdentifyActor => sender ! this
 		case t: Transaction => processTransaction(t)
 		case t: TransactionRequestReceipt => {
@@ -57,9 +57,11 @@ class Bank(val bankId: String) extends Actor {
 
 	def processTransaction(t: Transaction): Unit = {
 		implicit val timeout = new Timeout(5 seconds)
-		val isInternal = t.to.length <= 4
+		var isInternal = t.to.length <= 4
 		val toBankId = if (isInternal) bankId else t.to.substring(0, 4)
 		val toAccountId = if (isInternal) t.to else t.to.substring(4)
+		if (toBankId == bankId)
+			isInternal = true
 		val transactionStatus = t.status
 
 		if (isInternal) {
