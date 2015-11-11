@@ -110,7 +110,7 @@ class Account(val accountId: String, val bankId: String, val initialBalance: Dou
           t.status = TransactionStatus.FAILED
       }
 
-      if t.to.length > 4 {
+      if (t.to.length > 4) {
         val to_bankId = t.to.substring(0, 4)
       } else {
         val to_bankId = t.to
