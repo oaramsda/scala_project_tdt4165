@@ -5,11 +5,11 @@ object TransactionStatus extends Enumeration {
 }
 
 class Transaction(val from: String,
-									val to: String,
-									val amount: Double,
-									var status: TransactionStatus.Value = TransactionStatus.PENDING,
-									val id: String = java.util.UUID.randomUUID.toString,
-									var receiptReceived: Boolean = false) {
+                  val to: String,
+                  val amount: Double,
+                  var status: TransactionStatus.Value = TransactionStatus.PENDING,
+                  val id: String = java.util.UUID.randomUUID.toString,
+                  var receiptReceived: Boolean = false) {
 
 	def isCompleted: Boolean = {
 		this.status != TransactionStatus.PENDING

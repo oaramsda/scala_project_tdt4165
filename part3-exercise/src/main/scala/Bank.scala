@@ -52,7 +52,7 @@ class Bank(val bankId: String) extends Actor {
 		val toBankId = if (isInternal) bankId else t.to.substring(0, 4)
 		val toAccountId = if (isInternal) t.to else t.to.substring(4)
 		val transactionStatus = t.status
-		
+
 		// This method should forward Transaction t to an account or another bank, depending on the "to"-address.
 		// HINT: Make use of the variables that have been defined above.
 		???
