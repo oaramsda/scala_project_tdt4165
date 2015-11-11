@@ -110,7 +110,15 @@ class Account(val accountId: String, val bankId: String, val initialBalance: Dou
           t.status = TransactionStatus.FAILED
       }
 
-      t.status = TransactionStatus.SUCCESS
+      if t.to.length > 4 {
+        val to_bankId = t.to.substring(0, 4)
+      } else {
+        val to_bankId = t.to
+      }
+
+      val bank: ActorRef = BankManager.findBank(to_bankId)
+      val receipt = new TransactionRequestReceipt(t.to, t.id, t)
+      bank ! receipt
 
 		}
 
