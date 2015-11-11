@@ -24,7 +24,7 @@ class Account(val accountId: String, val bankId: String, val initialBalance: Dou
 
 	def getTransactions: List[Transaction] = {
 		// Should return a list of all Transaction-objects stored in transactions
-		???
+		transactions.values.toList
 	}
 
 	def allTransactionsCompleted: Boolean = {
@@ -49,7 +49,7 @@ class Account(val accountId: String, val bankId: String, val initialBalance: Dou
 
 	def sendTransactionToBank(t: Transaction): Unit = {
 		// Should send a message containing t to the bank of this account
-		???
+		transactions += t
 	}
 
 	def transferTo(accountNumber: String, amount: Double): Transaction = {
