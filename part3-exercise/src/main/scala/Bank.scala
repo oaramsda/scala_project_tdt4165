@@ -38,15 +38,19 @@ class Bank(val bankId: String) extends Actor {
 		case t: Transaction => processTransaction(t)
 		case t: TransactionRequestReceipt => {
 			val acc = t.toAccountNumber
-			val isInternal = acc.length <= 4
+			var isInternal = acc.length <= 4
 			val toBankId = if (isInternal) bankId else acc.substring(0, 4)
 			val toAccountId = if (isInternal) acc else acc.substring(4)
+			if (toBankId == bankId)
+				isInternal = true
+
+			println("LOOPING?!")
 
 			if (isInternal) {
 				val receivingAccount = findAccount(toAccountId).get
 				receivingAccount ! t
 			} else {
-				val sendToExternalBank = findOtherBank(bankId).get
+				val sendToExternalBank = findOtherBank(toBankId).get
 				sendToExternalBank ! t
 			}
 
