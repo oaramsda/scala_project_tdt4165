@@ -53,7 +53,7 @@ class Account(val accountId: String, val bankId: String, val initialBalance: Dou
 
 	def sendTransactionToBank(t: Transaction): Unit = {
 		// Should send a message containing t to the bank of this account
-		var bank: Bank = BankManager.findBank(bankId)
+		var bank: ActorRef = BankManager.findBank(bankId)
 		bank ! t
 	}
 
@@ -89,7 +89,10 @@ class Account(val accountId: String, val bankId: String, val initialBalance: Dou
 
 		case TransactionRequestReceipt(to, transactionId, transaction) => {
 			if (transactions.contains(transactionId)) {
-				transactions.get(transactionId) = transaction
+				var transac = transactions.get(transactionId)
+				var trans = transac.get
+				trans.receiptReceived = true
+				trans.status = transaction.status
 			}
 		}
 
@@ -100,7 +103,15 @@ class Account(val accountId: String, val bankId: String, val initialBalance: Dou
 
 		case t: Transaction => {
 			// Handle incoming transaction
-			???
+      try {
+        this.deposit(t.amount)
+      } catch {
+        case _: IllegalAmountException =>
+          t.status = TransactionStatus.FAILED
+      }
+
+      t.status = TransactionStatus.SUCCESS
+
 		}
 
 		case msg => ???
