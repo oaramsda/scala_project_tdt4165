@@ -53,7 +53,6 @@ class Account(val accountId: String, val bankId: String, val initialBalance: Dou
 
 	def sendTransactionToBank(t: Transaction): Unit = {
 		// Should send a message containing t to the bank of this account
-		reserveTransaction(t)
 		var bank: Bank = BankManager.findBank(bankId)
 		bank ! t
 	}
@@ -89,8 +88,9 @@ class Account(val accountId: String, val bankId: String, val initialBalance: Dou
 		case IdentifyActor => sender ! this
 
 		case TransactionRequestReceipt(to, transactionId, transaction) => {
-			// Process receipt
-			???
+			if (transactions.contains(transactionId)) {
+				transactions.get(transactionId) = transaction
+			}
 		}
 
 		case BalanceRequest => ??? // Should return current balance
