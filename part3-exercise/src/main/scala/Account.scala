@@ -29,7 +29,11 @@ class Account(val accountId: String, val bankId: String, val initialBalance: Dou
 
 	def allTransactionsCompleted: Boolean = {
 		// Should return whether all Transaction-objects in transactions are completed
-		???
+		for (i <- transactions.values) {
+			if (i.isCompleted == false)
+				return false
+		}
+		true
 	}
 
 	def withdraw(amount: Double): Unit = {
@@ -49,7 +53,8 @@ class Account(val accountId: String, val bankId: String, val initialBalance: Dou
 
 	def sendTransactionToBank(t: Transaction): Unit = {
 		// Should send a message containing t to the bank of this account
-		transactions += t
+		var bank: Bank = BankManager.findBank(bankId)
+		bank ! t
 	}
 
 	def transferTo(accountNumber: String, amount: Double): Transaction = {
@@ -83,11 +88,15 @@ class Account(val accountId: String, val bankId: String, val initialBalance: Dou
 		case IdentifyActor => sender ! this
 
 		case TransactionRequestReceipt(to, transactionId, transaction) => {
-			// Process receipt
-			???
+			if (transactions.contains(transactionId)) {
+				transactions.get(transactionId) = transaction
+			}
 		}
 
-		case BalanceRequest => ??? // Should return current balance
+		// Should return current balance
+		case BalanceRequest => {
+			sender ! balance.amount
+		}
 
 		case t: Transaction => {
 			// Handle incoming transaction

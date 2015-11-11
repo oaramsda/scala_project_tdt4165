@@ -19,17 +19,17 @@ class Bank(val bankId: String) extends Actor {
 		// Should create a new Account Actor and return its actor reference. Accounts should be assigned with unique ids (increment with 1).
 		val acc: Account = new Account(accountCounter.incrementAndGet.toString, bankId, initialBalance)
 
-    acc.ActorRef
+    acc.self
 	}
 
 	def findAccount(accountId: String): Option[ActorRef] = {
 		// Use BankManager to look up an account with ID accountId
-		???
+		Some(BankManager.findAccount(bankId, accountId))
 	}
 
 	def findOtherBank(bankId: String): Option[ActorRef] = {
 		// Use BankManager to look up a different bank with ID bankId
-		???
+		Some(BankManager.findBank(bankId))
 	}
 
 	override def receive = {
