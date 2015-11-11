@@ -5,98 +5,98 @@ import scala.collection.immutable.HashMap
 case class TransactionRequest(toAccountNumber: String, amount: Double)
 
 case class TransactionRequestReceipt(toAccountNumber: String,
-                                     transactionId: String,
-                                     transaction: Transaction)
+																		 transactionId: String,
+																		 transaction: Transaction)
 
 case class BalanceRequest()
 
 class Account(val accountId: String, val bankId: String, val initialBalance: Double = 0) extends Actor {
 
-  private var transactions = HashMap[String, Transaction]()
+	private var transactions = HashMap[String, Transaction]()
 
-  class Balance(var amount: Double) {}
+	class Balance(var amount: Double) {}
 
-  val balance = new Balance(initialBalance)
+	val balance = new Balance(initialBalance)
 
-  def getFullAddress: String = {
-    bankId + accountId
-  }
+	def getFullAddress: String = {
+		bankId + accountId
+	}
 
-  def getTransactions: List[Transaction] = {
-    // Should return a list of all Transaction-objects stored in transactions
-    ???
-  }
+	def getTransactions: List[Transaction] = {
+		// Should return a list of all Transaction-objects stored in transactions
+		???
+	}
 
-  def allTransactionsCompleted: Boolean = {
-    // Should return whether all Transaction-objects in transactions are completed
-    ???
-  }
+	def allTransactionsCompleted: Boolean = {
+		// Should return whether all Transaction-objects in transactions are completed
+		???
+	}
 
-  def withdraw(amount: Double): Unit = {
-    balance.synchronized {
-      if (balance.amount - amount < 0) throw new NoSufficientFundsException
-      if (amount <= 0) throw new IllegalAmountException
-      balance.amount -= amount
-    }
-  }
+	def withdraw(amount: Double): Unit = {
+		balance.synchronized {
+			if (balance.amount - amount < 0) throw new NoSufficientFundsException
+			if (amount <= 0) throw new IllegalAmountException
+			balance.amount -= amount
+		}
+	}
 
-  def deposit(amount: Double): Unit = {
-    balance.synchronized {
-      if (amount <= 0) throw new IllegalAmountException()
-      balance.amount += amount
-    }
-  }
+	def deposit(amount: Double): Unit = {
+		balance.synchronized {
+			if (amount <= 0) throw new IllegalAmountException()
+			balance.amount += amount
+		}
+	}
 
-  def sendTransactionToBank(t: Transaction): Unit = {
-    // Should send a message containing t to the bank of this account
-    ???
-  }
+	def sendTransactionToBank(t: Transaction): Unit = {
+		// Should send a message containing t to the bank of this account
+		???
+	}
 
-  def transferTo(accountNumber: String, amount: Double): Transaction = {
-    
-    val t = new Transaction(from = getFullAddress, to = accountNumber, amount = amount)
+	def transferTo(accountNumber: String, amount: Double): Transaction = {
+		
+		val t = new Transaction(from = getFullAddress, to = accountNumber, amount = amount)
 
-    if (reserveTransaction(t)) {
-      try {
-        withdraw(amount)
-        sendTransactionToBank(t)
+		if (reserveTransaction(t)) {
+			try {
+				withdraw(amount)
+				sendTransactionToBank(t)
 
-      } catch {
-        case _: NoSufficientFundsException | _: IllegalAmountException =>
-          t.status = TransactionStatus.FAILED
-      }
-    }
+			} catch {
+				case _: NoSufficientFundsException | _: IllegalAmountException =>
+					t.status = TransactionStatus.FAILED
+			}
+		}
 
-    t
+		t
 
-  }
+	}
 
-  def reserveTransaction(t: Transaction): Boolean = {
-    if (!transactions.contains(t.id)) {
-      transactions += (t.id -> t)
-      return true
-    }
-    false
-  }
+	def reserveTransaction(t: Transaction): Boolean = {
+		if (!transactions.contains(t.id)) {
+			transactions += (t.id -> t)
+			return true
+		}
+		false
+	}
 
-  override def receive = {
-    case IdentifyActor => sender ! this
+	override def receive = {
+		case IdentifyActor => sender ! this
 
-    case TransactionRequestReceipt(to, transactionId, transaction) => {
-      // Process receipt
-      ???
-    }
+		case TransactionRequestReceipt(to, transactionId, transaction) => {
+			// Process receipt
+			???
+		}
 
-    case BalanceRequest => ??? // Should return current balance
+		case BalanceRequest => ??? // Should return current balance
 
-    case t: Transaction => {
-      // Handle incoming transaction
-      ???
-    }
-    
-    case msg => ???
-  }
+		case t: Transaction => {
+			// Handle incoming transaction
+			???
+		}
+		
+		case msg => ???
+	}
 
-  def getBalanceAmount: Double = balance.amount
+	def getBalanceAmount: Double = balance.amount
 
 }
