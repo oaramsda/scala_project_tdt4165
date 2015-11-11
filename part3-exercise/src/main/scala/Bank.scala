@@ -32,9 +32,7 @@ class Bank(val bankId: String) extends Actor {
 	}
 
 	override def receive = {
-		case CreateAccountRequest(initialBalance) => {// Create a new account
-			sender ! createAccount(initialBalance)
-		}
+		case CreateAccountRequest(initialBalance) => sender ! createAccount(initialBalance)
 		case GetAccountRequest(id) => sender ! findAccount(id)// Return account
 		case IdentifyActor => sender ! this
 		case t: Transaction => processTransaction(t)
@@ -64,8 +62,8 @@ class Bank(val bankId: String) extends Actor {
 		val toAccountId = if (isInternal) t.to else t.to.substring(4)
 		val transactionStatus = t.status
 
-    if (isInternal) {
-      val receivingAccount = findAccount(toAccountId)
+		if (isInternal) {
+			val receivingAccount = findAccount(toAccountId)
 			if (receivingAccount.isEmpty) {
 				t.status = TransactionStatus.FAILED
 				this.self ! new TransactionRequestReceipt(toAccountId, t.id, t)
