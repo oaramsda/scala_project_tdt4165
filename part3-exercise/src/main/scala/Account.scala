@@ -108,17 +108,20 @@ class Account(val accountId: String, val bankId: String, val initialBalance: Dou
       } catch {
         case _: IllegalAmountException =>
           t.status = TransactionStatus.FAILED
-      }
-      var to_bankId: String = ""
-      if (t.to.length > 4) {
-        to_bankId = t.to.substring(0, 4)
-      } else {
-        to_bankId = t.to
-      }
 
-      val bank: ActorRef = BankManager.findBank(to_bankId)
-      val receipt = new TransactionRequestReceipt(t.to, t.id, t)
-      bank ! receipt
+      } finally {
+        var to_bankId: String = ""
+        if (t.to.length > 4) {
+          to_bankId = t.to.substring(0, 4)
+        } else {
+          to_bankId = t.to
+        }
+
+        val bank: ActorRef = BankManager.findBank(to_bankId)
+        val receipt = new TransactionRequestReceipt(t.to, t.id, t)
+        bank ! receipt
+      }
+      
 
 		}
 
