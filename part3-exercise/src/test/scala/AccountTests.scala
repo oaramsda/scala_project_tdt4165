@@ -47,7 +47,7 @@ class Test01 extends FunSuite {
 		implicit val timeout = Timeout(5 seconds)
 		val bank: Bank = Await.result(ask(bankRef, IdentifyActor).mapTo[Bank], 10 seconds)
 		assert(bank.bankId == "2001")
-		println("@@@@@@@@@@@@@@@\n"+"@@@@@@@@@@@@@@@\n"+"\n0001")
+		
 	}
 
 }
@@ -59,7 +59,7 @@ class Test02 extends FunSuite {
 		val bank: ActorRef = BankManager.createBank("2002")
 		val (accountRef, account) = TestHelper.createBankAccount("2002", 1000)
 		assert(account.accountId == "1001" && account.getBalanceAmount == 1000)
-		println("@@@@@@@@@@@@@@@\n"+"\n0002")
+		
 	}
 
 }
@@ -77,7 +77,7 @@ class Test03 extends FunSuite {
 
 		TestHelper.waitUntilAllTransactionsAreCompleted(List(account1, account2))
 		assert(account1.getBalanceAmount == 800 && account2.getBalanceAmount == 1200)
-		println("@@@@@@@@@@@@@@@\n"+"\n0003")
+		
 	}
 }
 
@@ -95,7 +95,7 @@ class Test04 extends FunSuite {
 		account1.transferTo(account2.getFullAddress, 200)
 		TestHelper.waitUntilAllTransactionsAreCompleted(List(account1, account2))
 		assert(account1.getBalanceAmount == 800 && account2.getBalanceAmount == 1200)
-		println("@@@@@@@@@@@@@@@\n"+"\n0004")
+		
 	}
 }
 
@@ -119,7 +119,7 @@ class Test05 extends FunSuite {
 			assert(t.isCompleted)
 			assert(t.isSuccessful)
 		})
-		println("@@@@@@@@@@@@@@@\n"+"\n0005")
+		
 
 	}
 }
@@ -144,7 +144,7 @@ class Test06 extends FunSuite {
 
 		assert(account1.getBalanceAmount == 950 && account2.getBalanceAmount == 1050)
 
-		println("@@@@@@@@@@@@@@@\n"+"\n0006")
+		
 	}
 
 }
@@ -171,7 +171,7 @@ class Test07 extends FunSuite {
 
 		assert(account1.getBalanceAmount == 850 && account2.getBalanceAmount == 1150)
 
-		println("@@@@@@@@@@@@@@@\n"+"\n0007")
+		
 	}
 
 }
@@ -213,7 +213,7 @@ class Test08 extends FunSuite {
 			&& account2.getBalanceAmount == 1120
 			&& account3.getBalanceAmount == 900)
 
-		println("@@@@@@@@@@@@@@@\n"+"\n0008")
+		
 	}
 
 }
@@ -249,7 +249,7 @@ class Test09 extends FunSuite {
 		assert(account1.getBalanceAmount == 1000)
 		assert(account2.getBalanceAmount == 1000)
 
-		println("@@@@@@@@@@@@@@@\n"+"\n0009")
+		
 	}
 
 }
@@ -278,7 +278,7 @@ class Test10 extends FunSuite {
 			assert(t.isSuccessful)
 		})
 
-		println("@@@@@@@@@@@@@@@\n"+"\n0010")
+		
 	}
 
 }
@@ -302,7 +302,7 @@ class Test11 extends FunSuite {
 			assert(!t.isSuccessful)
 		})
 
-		println("@@@@@@@@@@@@@@@\n"+"\n0011")
+		
 	}
 
 }
@@ -324,7 +324,7 @@ class Test12 extends FunSuite {
 		assert(account1.getBalanceAmount == 1000)
 		assert(account2.getBalanceAmount == 1000)
 
-		println("@@@@@@@@@@@@@@@\n"+"\n0012")
+		
 	}
 
 }
@@ -344,7 +344,7 @@ class Test13 extends FunSuite {
 
 		assert(bank1.bankId.equals("1301") && bank2.bankId.equals("1302"))
 
-		println("@@@@@@@@@@@@@@@\n"+"\n0013")
+		
 	}
 }
 
@@ -377,7 +377,7 @@ class Test14 extends FunSuite {
 		assert(acc2Balance == 1196 && acc2Balance == account2.getBalanceAmount)
 		assert(acc3Balance == 896 && acc2Balance == account2.getBalanceAmount)
 
-		println("@@@@@@@@@@@@@@@\n"+"\n0014")
+		
 	}
 
 }
@@ -422,7 +422,7 @@ class Test15 extends FunSuite {
 
 		assert(notAllBalancesIs1000)
 
-		println("@@@@@@@@@@@@@@@\n"+"\n0015")
+		
 	}
 
 }
@@ -445,7 +445,7 @@ class Test16 extends FunSuite {
 
 		assert(account1.getBalanceAmount == 1000)
 
-		println("@@@@@@@@@@@@@@@\n"+"\n0016")
+		
 	}
 }
 
@@ -468,6 +468,6 @@ class Test17 extends FunSuite {
 
 		assert(account1.getBalanceAmount == 1000)
 
-		println("@@@@@@@@@@@@@@@\n"+"\n0017")
+		
 	}
 }

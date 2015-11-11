@@ -44,7 +44,7 @@ class Bank(val bankId: String) extends Actor {
 			if (toBankId == bankId)
 				isInternal = true
 
-			println("LOOPING?!")
+			
 
 			if (isInternal) {
 				var receivingAccount: Option[ActorRef] = null
@@ -85,14 +85,14 @@ class Bank(val bankId: String) extends Actor {
 		if (toBankId == bankId)
 			isInternal = true
 
-		println(toBankId + " " + bankId)
+		
 
 		if (isInternal) {
-			println("IS INTERNAL")
+			
 			var receivingAccount: Option[ActorRef] = null
 			try {
 				receivingAccount = findAccount(toAccountId)
-				println("ACCOUNT RECEIVED TRANSACTION")
+				
 				if (receivingAccount.isEmpty) {
 					t.status = TransactionStatus.FAILED
 					sender ! new TransactionRequestReceipt(toAccountId, t.id, t)

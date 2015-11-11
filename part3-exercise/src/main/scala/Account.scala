@@ -89,7 +89,7 @@ class Account(val accountId: String, val bankId: String, val initialBalance: Dou
 
 		case TransactionRequestReceipt(to, transactionId, transaction) => {
 			if (transactions.contains(transactionId)) {
-				println("FIRED BRANCH")
+				
 				var transac = transactions.get(transactionId)
 				var trans = transac.get
 				trans.receiptReceived = true
@@ -97,7 +97,7 @@ class Account(val accountId: String, val bankId: String, val initialBalance: Dou
 
 				if (!transaction.isSuccessful) {
 					this.deposit(transaction.amount)
-					println("ACCOUNT: BALANCE:" + getBalanceAmount)
+					
 				}
 			}
 		}
