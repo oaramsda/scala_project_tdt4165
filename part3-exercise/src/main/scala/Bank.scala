@@ -47,11 +47,27 @@ class Bank(val bankId: String) extends Actor {
 			println("LOOPING?!")
 
 			if (isInternal) {
-				val receivingAccount = findAccount(toAccountId).get
-				receivingAccount ! t
+				var receivingAccount: Option[ActorRef] = null
+				try {
+					receivingAccount = findAccount(toAccountId)
+					if (receivingAccount.isEmpty) {
+						t.transaction.status = TransactionStatus.FAILED
+					}
+					else
+						receivingAccount.get ! t
+				} catch {
+					case exc: java.util.NoSuchElementException => {
+						t.transaction.status = TransactionStatus.FAILED
+					}
+				}
 			} else {
-				val sendToExternalBank = findOtherBank(toBankId).get
-				sendToExternalBank ! t
+				val sendToExternalBank = findOtherBank(toBankId)
+				if (sendToExternalBank.isEmpty) {
+					t.transaction.status = TransactionStatus.FAILED
+					this.self ! t
+				}
+				else
+					sendToExternalBank.get ! t
 			}
 
 		}
@@ -73,14 +89,21 @@ class Bank(val bankId: String) extends Actor {
 
 		if (isInternal) {
 			println("IS INTERNAL")
-			val receivingAccount = findAccount(toAccountId)
-			if (receivingAccount.isEmpty) {
-				t.status = TransactionStatus.FAILED
-				this.self ! new TransactionRequestReceipt(toAccountId, t.id, t)
-			}
-			else {
+			var receivingAccount: Option[ActorRef] = null
+			try {
+				receivingAccount = findAccount(toAccountId)
 				println("ACCOUNT RECEIVED TRANSACTION")
-				receivingAccount.get ! t
+				if (receivingAccount.isEmpty) {
+					t.status = TransactionStatus.FAILED
+					this.self ! new TransactionRequestReceipt(toAccountId, t.id, t)
+				}
+				val receivingAccountGotten = receivingAccount.get
+				receivingAccountGotten ! t
+			} catch {
+				case exc: java.util.NoSuchElementException => {
+					t.status = TransactionStatus.FAILED
+					this.self ! new TransactionRequestReceipt(toAccountId, t.id, t)
+				}
 			}
     } else {
       val sendToExternalBank = findOtherBank(toBankId)
