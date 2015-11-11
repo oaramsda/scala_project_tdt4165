@@ -53,7 +53,7 @@ class Account(val accountId: String, val bankId: String, val initialBalance: Dou
 
 	def sendTransactionToBank(t: Transaction): Unit = {
 		// Should send a message containing t to the bank of this account
-		var bank: Bank = BankManager.findBank(bankId)
+		var bank: ActorRef = BankManager.findBank(bankId)
 		bank ! t
 	}
 
@@ -108,7 +108,7 @@ class Account(val accountId: String, val bankId: String, val initialBalance: Dou
       }
 
       t.status = TransactionStatus.SUCCESS
-			
+
 		}
 
 		case msg => ???
